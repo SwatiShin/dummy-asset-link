@@ -3,7 +3,7 @@ module dummy-asset-link
 go 1.25.7
 
 require (
-	github.com/industrial-asset-hub/asset-link-sdk/v4 v4.0.0
+	github.com/industrial-asset-hub/asset-link-sdk/v4 v4.0.0-20260508062757-e58a30e08189
 	github.com/rs/zerolog v1.35.1
 	github.com/stretchr/testify v1.11.1
 	google.golang.org/grpc v1.81.0
@@ -51,4 +51,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/industrial-asset-hub/asset-link-sdk/v4 => ../
+
