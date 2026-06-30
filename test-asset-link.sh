@@ -181,7 +181,7 @@ test_validate-asset(){
     fi
 
     # download the base schema for validation
-    test_ok curl -o "$TEST_PATH/iah_base.yaml" https://raw.githubusercontent.com/industrial-asset-hub/asset-link-sdk/main/model/iah_base_v1.9.0.yaml
+    test_ok curl -o "$TEST_PATH/iah_base.yaml" https://raw.githubusercontent.com/industrial-asset-hub/asset-link-sdk/main/model/iah_base_v1.11.0.yaml
 
     # run the validate asset tests
     test_ok alctl test api -l --service-name discovery -v --base-schema-path "$TEST_PATH/iah_base.yaml" --target-class Asset
@@ -197,6 +197,27 @@ test-discovery-api(){
 
     testcase_ok "Discovery API" "Testing discovery API"
     test_ok alctl test api --service-name discovery
+
+    DONE=true
+}
+
+test-deviceinfo-api(){
+    prepare
+
+    local PROPERTY_REQUEST_FILE="$TEST_PATH/get-property-values-request.json"
+    cat > "$PROPERTY_REQUEST_FILE" <<'EOF'
+{
+  "keys": [
+    "name",
+    "description",
+    "asset_operations",
+    "connection_points"
+  ]
+}
+EOF
+
+    testcase_ok "DeviceInfo API" "Testing DeviceInfo GetPropertyValues API"
+    test_ok alctl test api --service-name deviceinfo -p "$PROPERTY_REQUEST_FILE"
 
     DONE=true
 }
@@ -227,7 +248,7 @@ cleanup(){
 print_usage(){
     echo "Usage: $0 <FEATURE>"
     echo ""
-    echo "Available Features: discover, registration, validate-asset, discovery-api"
+    echo "Available Features: discover, registration, validate-asset, discovery-api, deviceinfo-api"
 }
 
 if [[ $# -ne 1 ]]; then
@@ -245,6 +266,8 @@ elif [[ "$1" == "validate-asset" ]]; then
     test_validate-asset
 elif [[ "$1" == "discovery-api" ]]; then
     test-discovery-api
+elif [[ "$1" == "deviceinfo-api" ]]; then
+    test-deviceinfo-api
 else
     error "Unknown feature: $1"
     echo ""

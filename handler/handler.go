@@ -15,6 +15,7 @@ import (
 	"sync"
 
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/config"
+	generatedDeviceInfo "github.com/industrial-asset-hub/asset-link-sdk/v4/generated/conn_suite_device_info"
 	generated "github.com/industrial-asset-hub/asset-link-sdk/v4/generated/iah-discovery"
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/model"
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/publish"
@@ -27,6 +28,20 @@ import (
 
 type AssetLinkImplementation struct {
 	discoveryLock sync.Mutex
+}
+
+// templateSupportedProperties is treated as immutable.
+var templateSupportedProperties = []*generatedDeviceInfo.SupportedProperty{
+	{Key: "name", Type: &generatedDeviceInfo.SupportedProperty_Datatype{Datatype: generated.VariantType_VT_STRING}},
+	{Key: "description", Type: &generatedDeviceInfo.SupportedProperty_Datatype{Datatype: generated.VariantType_VT_STRING}},
+	{Key: "functional_object_type", Type: &generatedDeviceInfo.SupportedProperty_Datatype{Datatype: generated.VariantType_VT_STRING}},
+	{Key: "functional_object_schema_url", Type: &generatedDeviceInfo.SupportedProperty_Datatype{Datatype: generated.VariantType_VT_STRING}},
+	{Key: "asset_identifiers", Type: &generatedDeviceInfo.SupportedProperty_Datatype{Datatype: generated.VariantType_VT_ARRAY}},
+	{Key: "asset_relations", Type: &generatedDeviceInfo.SupportedProperty_Datatype{Datatype: generated.VariantType_VT_ARRAY}},
+	{Key: "connection_points", Type: &generatedDeviceInfo.SupportedProperty_Datatype{Datatype: generated.VariantType_VT_ARRAY}},
+	{Key: "software_components", Type: &generatedDeviceInfo.SupportedProperty_Datatype{Datatype: generated.VariantType_VT_ARRAY}},
+	{Key: "asset_operations", Type: &generatedDeviceInfo.SupportedProperty_Datatype{Datatype: generated.VariantType_VT_ARRAY}},
+	{Key: "product_instance_information", Type: &generatedDeviceInfo.SupportedProperty_Datatype{Datatype: generated.VariantType_VT_STRUCT}},
 }
 
 func (m *AssetLinkImplementation) Discover(discoveryConfig config.DiscoveryConfig, devicePublisher publish.DevicePublisher) error {
@@ -68,100 +83,8 @@ func (m *AssetLinkImplementation) Discover(discoveryConfig config.DiscoveryConfi
 	//			Description: "Error retrieving device details",
 	//		}
 
-	// Fillup the device information
-	assetName := "Dummy Device 1"
-	vendorName := "Machine Builder AG"
-	productName := "Dummy Product"
-	orderNumber := "AN0123456789"
-	serialNumber := "SN00012345678900001"
-	hardwareVersion := "3"
-	firmwareVersion := "1.0.0"
-
-	productUri := fmt.Sprintf(
-		"%s/?1P=%s&S=%s",
-		strings.TrimRight("https://www.device-builder.local", "/"),
-		url.QueryEscape(orderNumber),
-		url.QueryEscape(serialNumber),
-	)
-
-	deviceInfo, err := model.NewDevice("Asset", assetName)
-	if err != nil {
-		if errors.Is(err, model.ErrEmpty) {
-			log.Warn().Err(err).Msg("one or more required fields for creating device info are empty, cannot create device info for discovered device")
-			return nil
-		}
-		log.Warn().Err(err).Msg("Could not create device info")
-		return nil
-	}
-	if err = deviceInfo.AddNameplate(vendorName, productUri, orderNumber, productName, hardwareVersion, serialNumber); err != nil {
-		if errors.Is(err, model.ErrEmpty) {
-			log.Warn().Err(err).Msg("One or more nameplate fields are empty, cannot add nameplate information to device info")
-			return nil
-		}
-		log.Warn().Err(err).Msg("Could not add nameplate information to device info")
-		return nil
-	}
-	if err = deviceInfo.AddSoftwareArtifactComponent("Firmware", firmwareVersion, true); err != nil {
-		if errors.Is(err, model.ErrEmpty) {
-			log.Warn().Err(err).Msg("Firmware version is empty, cannot add firmware information to device info")
-			return nil
-		}
-	}
-	if err = deviceInfo.AddCapabilities("firmware_update", false); err != nil {
-		if errors.Is(err, model.ErrEmpty) {
-			log.Warn().Err(err).Msg("Capability name is empty, cannot add capability information to device info")
-			return nil
-		}
-	}
-	if err = deviceInfo.AddDescription("Dummy Device"); err != nil {
-		if errors.Is(err, model.ErrEmpty) {
-			log.Warn().Err(err).Msg("Description is empty, cannot add description to device info")
-			return nil
-		}
-	}
-
-	nicID, err := deviceInfo.AddNic("eth0", "00:16:3e:01:02:03") // random mac address
-	if err != nil {
-		if errors.Is(err, model.ErrEmpty) {
-			log.Warn().Err(err).Msg("MAC address is empty, cannot add NIC to device info")
-			return nil
-		} else if errors.Is(err, model.ErrValidation) {
-			log.Warn().Err(err).Msg("MAC address format is invalid, cannot add NIC to device info")
-			return nil
-		}
-		log.Warn().Err(err).Msg("Could not add NIC to device info")
-		return nil
-	}
-	if _, err = deviceInfo.AddIPv4(nicID, "192.168.0.10", "255.255.255.0", "192.168.0.1"); err != nil {
-		if errors.Is(err, model.ErrEmpty) {
-			log.Warn().Err(err).Msg("IP address or network mask is empty, cannot add IPv4 connectivity to device info")
-			return nil
-		} else if errors.Is(err, model.ErrValidation) {
-			log.Warn().Err(err).Msg("IP address or network mask format is invalid, cannot add IPv4 connectivity to device info")
-			return nil
-		}
-		log.Warn().Err(err).Msg("Could not add IPv4 connectivity to device info")
-		return nil
-	}
-	if _, err = deviceInfo.AddIPv4(nicID, "10.0.0.153", "255.255.255.0", "10.0.0.1"); err != nil {
-		if errors.Is(err, model.ErrEmpty) {
-			log.Warn().Err(err).Msg("IP address or network mask is empty, cannot add IPv4 connectivity to device info")
-			return nil
-		} else if errors.Is(err, model.ErrValidation) {
-			log.Warn().Err(err).Msg("IP address or network mask format is invalid, cannot add IPv4 connectivity to device info")
-			return nil
-		}
-		log.Warn().Err(err).Msg("Could not add IPv4 connectivity to device info")
-		return nil
-	}
-
-	// Convert and publish device
-	discoveredDevice := deviceInfo.ConvertToDiscoveredDevice()
-
-	err = devicePublisher.PublishDevice(discoveredDevice)
-	if err != nil {
-		// discovery request was likely cancelled -> terminate discovery and return error
-		log.Error().Msgf("Publishing Error: %v", err)
+	// Minimal example: publish one device with an asset identifier (MAC) only.
+	if err := createAndPublishMinimalDevice(devicePublisher); err != nil {
 		return err
 	}
 
@@ -186,12 +109,130 @@ func (m *AssetLinkImplementation) GetSupportedFilters() []*generated.SupportedFi
 	return supportedFilters
 }
 
-// if the GetIdentifiers() interface is implemented by your asset link,
-// uncomment the Identifiers line in main.go to register the interface/feature and
-// add "siemens.common.identifiers.v1" to the app_types in the registry.json file
-func (m *AssetLinkImplementation) GetIdentifiers(identifiersRequest config.IdentifiersRequest) ([]*generated.DeviceIdentifier, error) {
-	log.Info().Msg("Handle Get Identifiers Request")
-	// Add your custom logic here to retrieve identifiers based on the provided parameters and credentials
-	identifiers := []*generated.DeviceIdentifier{}
-	return identifiers, nil
+// if your asset link implements the DeviceInfo interface,
+// uncomment the DeviceInfo line in main.go to register the interface/feature and
+// add "siemens.connectivitysuite.deviceinfo.v1" to the app_types in the registry.json file
+func (m *AssetLinkImplementation) GetPropertyValues(request *generatedDeviceInfo.GetPropertyValuesRequest) (*generatedDeviceInfo.GetPropertyValuesResponse, error) {
+	log.Info().Msg("Handle GetPropertyValues Request")
+	_ = request
+
+	deviceInfo, err := buildTemplateDeviceInfo()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Could not build device info: %v", err)
+	}
+
+	propertyResults, err := deviceInfo.ConvertToPropertyValueResults()
+	if err != nil {
+		return nil, err
+	}
+
+	return &generatedDeviceInfo.GetPropertyValuesResponse{PropertyResults: propertyResults}, nil
+}
+
+func (m *AssetLinkImplementation) GetSupportedProperties(_ *generatedDeviceInfo.GetSupportedPropertiesRequest) (*generatedDeviceInfo.GetSupportedPropertiesResponse, error) {
+	log.Info().Msg("Handle GetSupportedProperties Request")
+
+	return &generatedDeviceInfo.GetSupportedPropertiesResponse{Properties: templateSupportedProperties}, nil
+}
+
+func buildTemplateDeviceInfo() (*model.DeviceInfo, error) {
+	vendorName := "Machine Builder AG"
+	productFamily := "Dummy Product"
+	orderNumber := "AN0123456789"
+	serialNumber := "SN00012345678900001"
+	hardwareVersion := "3"
+	parentDeviceMAC := "00:16:3e:01:02:04"
+
+	productUri := fmt.Sprintf(
+		"%s/?1P=%s&S=%s",
+		strings.TrimRight("https://www.device-builder.local", "/"),
+		url.QueryEscape(orderNumber),
+		url.QueryEscape(serialNumber),
+	)
+
+	deviceInfo, err := model.NewDevice("Asset", "Dummy Device 1")
+	if err != nil {
+		return nil, err
+	}
+
+	if err = deviceInfo.AddNameplate(vendorName, productUri, orderNumber, productFamily, hardwareVersion, serialNumber); err != nil {
+		return nil, err
+	}
+
+	if err = deviceInfo.AddSoftwareArtifactComponent("Firmware", "1.0.0", true); err != nil {
+		return nil, err
+	}
+
+	if err = deviceInfo.AddAssetRelation(
+		"is_module_of",
+		model.RelatedAsset{
+			AssetIdentifiers: []interface{}{
+				model.MacIdentifier{
+					AssetIdentifierType: model.MacIdentifierAssetIdentifierTypeMacIdentifier,
+					MacAddress:          parentDeviceMAC,
+				},
+			},
+		},
+		model.RelationalRoleOfRelatedAssetValuesObject,
+		false,
+	); err != nil {
+		return nil, err
+	}
+
+	if err = deviceInfo.AddCapabilities("firmware_update", false); err != nil {
+		return nil, err
+	}
+
+	if err = deviceInfo.AddDescription("Dummy Device"); err != nil {
+		return nil, err
+	}
+
+	nicID, err := deviceInfo.AddNic("eth0", "00:16:3e:01:02:03")
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err = deviceInfo.AddIPv4(nicID, "192.168.0.10", "255.255.255.0", "192.168.0.1"); err != nil {
+		return nil, err
+	}
+
+	if _, err = deviceInfo.AddIPv4(nicID, "10.0.0.153", "255.255.255.0", "10.0.0.1"); err != nil {
+		return nil, err
+	}
+
+	return deviceInfo, nil
+}
+
+// logWarningIfEmpty logs a warning if err is ErrEmpty, otherwise logs a generic warning
+func logWarningIfEmpty(err error, emptyMsg, genericMsg string) {
+	if errors.Is(err, model.ErrEmpty) {
+		log.Warn().Err(err).Msg(emptyMsg)
+		return
+	}
+
+	log.Warn().Err(err).Msg(genericMsg)
+}
+
+// createAndPublishMinimalDevice creates one device with just an asset identifier.
+func createAndPublishMinimalDevice(devicePublisher publish.DevicePublisher) error {
+	deviceInfo, err := model.NewDevice("Asset", "Dummy Device 1")
+	if err != nil {
+		logWarningIfEmpty(err, "one or more required fields for creating device info are empty", "Could not create device info")
+		return err
+	}
+
+	if _, err = deviceInfo.AddNic("eth0", "00:16:3e:01:02:03"); err != nil {
+		logWarningIfEmpty(err, "MAC address is empty, cannot add NIC to device info", "Could not add NIC to device info")
+		if errors.Is(err, model.ErrValidation) {
+			log.Warn().Err(err).Msg("MAC address format is invalid, cannot add NIC to device info")
+		}
+		return err
+	}
+
+	if err = devicePublisher.PublishDevice(deviceInfo.ConvertToDiscoveredDevice()); err != nil {
+		log.Error().Msgf("Publishing Error: %v", err)
+		return err
+	}
+
+	return nil
 }
