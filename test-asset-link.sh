@@ -217,7 +217,7 @@ test-deviceinfo-api(){
 EOF
 
     testcase_ok "DeviceInfo API" "Testing DeviceInfo GetPropertyValues API"
-    test_ok alctl test api --service-name deviceinfo -p "$PROPERTY_REQUEST_FILE"
+    test_ok alctl test api --service-name properties -p "$PROPERTY_REQUEST_FILE"
 
     DONE=true
 }
