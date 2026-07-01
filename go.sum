@@ -45,8 +45,8 @@ github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
 github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
-github.com/industrial-asset-hub/asset-link-sdk/v4 v4.0.1-0.20260629171707-7d1b7cb24902 h1:mK2R599C9sdd2ZHv2DOKn2V+6lvFR5Bt9BY+T7jYMx8=
-github.com/industrial-asset-hub/asset-link-sdk/v4 v4.0.1-0.20260629171707-7d1b7cb24902/go.mod h1:dviBw+4o6SKwCz3h7uAzgnhQ4PT6dKWdwH/8NXOF+cY=
+github.com/industrial-asset-hub/asset-link-sdk/v4 v4.0.1-0.20260701043655-717b443eb97d h1:ksQdkGp0tyt1WsIaaiIC0K49bLuKkMJoMj3ZzPIW2Rs=
+github.com/industrial-asset-hub/asset-link-sdk/v4 v4.0.1-0.20260701043655-717b443eb97d/go.mod h1:dviBw+4o6SKwCz3h7uAzgnhQ4PT6dKWdwH/8NXOF+cY=
 github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
 github.com/klauspost/cpuid/v2 v2.3.0 h1:S4CRMLnYUhGeDFDqkGriYKdfoFlDnMtqTiI/sFzhA9Y=

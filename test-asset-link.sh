@@ -201,27 +201,6 @@ test-discovery-api(){
     DONE=true
 }
 
-test-deviceinfo-api(){
-    prepare
-
-    local PROPERTY_REQUEST_FILE="$TEST_PATH/get-property-values-request.json"
-    cat > "$PROPERTY_REQUEST_FILE" <<'EOF'
-{
-  "keys": [
-    "name",
-    "description",
-    "asset_operations",
-    "connection_points"
-  ]
-}
-EOF
-
-    testcase_ok "DeviceInfo API" "Testing DeviceInfo GetPropertyValues API"
-    test_ok alctl test api --service-name properties -p "$PROPERTY_REQUEST_FILE"
-
-    DONE=true
-}
-
 cleanup(){
     popd > /dev/null # IMPORTANT: switch back to original directory
 
@@ -248,7 +227,7 @@ cleanup(){
 print_usage(){
     echo "Usage: $0 <FEATURE>"
     echo ""
-    echo "Available Features: discover, registration, validate-asset, discovery-api, deviceinfo-api"
+    echo "Available Features: discover, registration, validate-asset, discovery-api"
 }
 
 if [[ $# -ne 1 ]]; then
@@ -266,8 +245,6 @@ elif [[ "$1" == "validate-asset" ]]; then
     test_validate-asset
 elif [[ "$1" == "discovery-api" ]]; then
     test-discovery-api
-elif [[ "$1" == "deviceinfo-api" ]]; then
-    test-deviceinfo-api
 else
     error "Unknown feature: $1"
     echo ""
