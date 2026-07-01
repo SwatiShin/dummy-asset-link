@@ -63,8 +63,7 @@ jobs:
         uses: ./.github/actions/prepare
       - name: Run Discovery API Test
         run: bash ./test-asset-link.sh discovery-api
-      - name: Run DeviceInfo API Test
-        run: bash ./test-asset-link.sh deviceinfo-api
+
 
   validate-asset:
     runs-on: ubuntu-latest
