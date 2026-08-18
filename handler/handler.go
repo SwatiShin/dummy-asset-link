@@ -141,7 +141,6 @@ func buildTemplateDeviceInfo() (*model.DeviceInfo, error) {
 	orderNumber := "AN0123456789"
 	serialNumber := "SN00012345678900001"
 	hardwareVersion := "3"
-	parentDeviceMAC := "00:16:3e:01:02:04"
 
 	productUri := fmt.Sprintf(
 		"%s/?1P=%s&S=%s",
@@ -160,22 +159,6 @@ func buildTemplateDeviceInfo() (*model.DeviceInfo, error) {
 	}
 
 	if err = deviceInfo.AddSoftwareArtifactComponent("Firmware", "1.0.0", true); err != nil {
-		return nil, err
-	}
-
-	if err = deviceInfo.AddAssetRelation(
-		"is_module_of",
-		model.RelatedAsset{
-			AssetIdentifiers: []interface{}{
-				model.MacIdentifier{
-					AssetIdentifierType: model.MacIdentifierAssetIdentifierTypeMacIdentifier,
-					MacAddress:          parentDeviceMAC,
-				},
-			},
-		},
-		model.RelationalRoleOfRelatedAssetValuesObject,
-		false,
-	); err != nil {
 		return nil, err
 	}
 

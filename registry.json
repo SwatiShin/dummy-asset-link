@@ -3,4 +3,3 @@
 "app_types": ["siemens.connectivitysuite.drvinfo.v1", "siemens.industrialassethub.discover.v1", "siemens.connectivitysuite.deviceinfo.v1"],
 "driver_schema_uris": ["machinebuilder.cdm.al.dummy"]
 }
-
