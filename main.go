@@ -14,14 +14,13 @@ import (
 	"os/signal"
 	"syscall"
 
-	"dummy-asset-link/handler"
-
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/assetlink"
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/logging"
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/metadata"
-
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+
+	"dummy-asset-link/handler"
 )
 
 var (
