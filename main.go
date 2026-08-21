@@ -17,10 +17,10 @@ import (
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/assetlink"
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/logging"
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/metadata"
+	"dummy-asset-link/handler"
+
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-
-	"dummy-asset-link/handler"
 )
 
 var (
@@ -43,7 +43,7 @@ func main() {
 		Str("date", date).
 		Msg("Starting " + alName + " driver")
 
-	// Setup log level
+	// Setup log of log infrastructure
 	var logLevel string
 	var grpcServerAddress, grpcServerEndpointAddress, httpServerAddress, registryAddress string
 	flag.StringVar(&logLevel, "log-level", "info", fmt.Sprintf("set log level. one of: %s,%s,%s,%s,%s,%s,%s",

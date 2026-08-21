@@ -3,7 +3,7 @@ module dummy-asset-link
 go 1.26.7
 
 require (
-	github.com/industrial-asset-hub/asset-link-sdk/v4 v4.1.1-0.20260820121919-ccdf93e07a63
+	github.com/industrial-asset-hub/asset-link-sdk/v4 v4.1.1-0.20260821045552-f6137001eff6
 	github.com/rs/zerolog v1.35.1
 	github.com/stretchr/testify v1.11.1
 	google.golang.org/grpc v1.82.1
