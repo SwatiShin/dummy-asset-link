@@ -1,6 +1,6 @@
 module dummy-asset-link
 
-go 1.27
+go 1.26.7
 
 require (
 	github.com/industrial-asset-hub/asset-link-sdk/v4 v4.1.1-0.20260820121919-ccdf93e07a63
