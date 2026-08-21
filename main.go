@@ -43,7 +43,7 @@ func main() {
 		Str("date", date).
 		Msg("Starting " + alName + " driver")
 
-	// Setup log of log infrastructure
+	// Setup log level
 	var logLevel string
 	var grpcServerAddress, grpcServerEndpointAddress, httpServerAddress, registryAddress string
 	flag.StringVar(&logLevel, "log-level", "info", fmt.Sprintf("set log level. one of: %s,%s,%s,%s,%s,%s,%s",
