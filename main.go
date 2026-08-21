@@ -14,10 +14,11 @@ import (
 	"os/signal"
 	"syscall"
 
+	"dummy-asset-link/handler"
+
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/assetlink"
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/logging"
 	"github.com/industrial-asset-hub/asset-link-sdk/v4/metadata"
-	"dummy-asset-link/handler"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
